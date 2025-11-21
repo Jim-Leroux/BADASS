@@ -32,7 +32,7 @@ unzip BADASS_P1.zip
 ```bash
 # Restaurer les images Docker depuis les fichiers tar
 docker load -i routeur_msharifi.tar
-docker load -i host-jileroux-1.tar
+docker load -i host_jileroux-1.tar
 
 # Vérifier que les images sont présentes
 docker images
@@ -43,7 +43,7 @@ docker images
 ## 4️⃣ Lancer GNS3
 
 * Ouvrir GNS3 dans la VM.
-* Aller dans **Edit → Preferences → Docker Containers** et vérifier que les images `routeur_msharifi` et `host-jileroux-1` apparaissent.
+* Aller dans **Edit → Preferences → Docker Containers** et vérifier que les images `routeur_msharifi` et `host_jileroux-1` apparaissent.
 
 ---
 
@@ -51,10 +51,10 @@ docker images
 
 1. Glisser-déposer les containers dans le projet.
 2. Ajouter un lien entre le routeur et le host.
-3. Ouvrir le terminal auxiliaire de FRR → `vtysh` pour vérifier que les daemons sont actifs :
+3. Ouvrir les terminaux auxiliaire de FRR & Alpine → `shell` pour vérifier que les machines fonctionnent et que les daemons sont actifs :
 
 ```bash
-show daemons
+ps
 ```
 
 * Pas besoin de config IP pour P1, tout est déjà dans les fichiers de config.
