@@ -23,8 +23,8 @@ sudo usermod -aG docker $USER   # then log out and back in
 ## Build the images
 
 ```
-docker build -t eflaquet_host    ./p1/eflaquet_host
-docker build -t eflaquet_routeur ./p1/eflaquet_routeur
+docker build -t fwong_host    ./p1/fwong_host
+docker build -t fwong_routeur ./p1/fwong_routeur
 ```
 
 Declare them in GNS3 (Edit > Preferences > Docker containers > New > Existing image).
@@ -54,7 +54,7 @@ Go in order. Do not move to the next step if one fails.
 
 **0. Router image** (inside the VM):
 ```
-docker run --rm --entrypoint sh eflaquet_routeur -c "ip link help 2>&1 | head -3; which vtysh"
+docker run --rm --entrypoint sh fwong_routeur -c "ip link help 2>&1 | head -3; which vtysh"
 ```
 Must print a `ip link add [link DEV | parentdev NAME]` usage (iproute2) and `/usr/bin/vtysh`.
 

@@ -29,7 +29,7 @@ Sous Alpine il n'y a pas de systemd. `tini` sert de PID 1 minimal : il reap les 
 Console sur le routeur → `ps` doit montrer zebra/bgpd/ospfd/isisd tournants.
 
 **Pourquoi le nom des images/dossiers contient ton login ?**
-Convention imposée par le sujet, pour identifier clairement le rendu de chaque étudiant (`eflaquet_host`, `eflaquet_routeur`).
+Convention imposée par le sujet, pour identifier clairement le rendu de chaque étudiant (`fwong_host`, `fwong_routeur`).
 
 **GNS3 vs Docker, quel rôle pour chacun ?**
 Docker construit et fait tourner les images (le contenu des machines). GNS3 orchestre la topologie réseau : il crée les nœuds à partir de ces images, les câble entre eux, gère les consoles.

@@ -1,4 +1,4 @@
-# routeur-eflaquet-1 - VXLAN mode dynamique multicast
+# routeur-fwong-1 - VXLAN mode dynamique multicast
 # Difference avec le mode statique : plus de "remote" unique, les VTEPs se
 # decouvrent dynamiquement via un groupe multicast.
 

@@ -1,5 +1,5 @@
-# routeur-eflaquet-1 - VXLAN mode statique (unicast)
-# eth0 = underlay (vers Switch_wil), eth1 = acces local vers host-eflaquet-1
+# routeur-fwong-1 - VXLAN mode statique (unicast)
+# eth0 = underlay (vers Switch_wil), eth1 = acces local vers host-fwong-1
 
 # --- 1. Underlay : IP sur l'interface physique qui va porter les paquets encapsules
 ip addr add 10.1.1.1/30 dev eth0

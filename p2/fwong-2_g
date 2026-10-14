@@ -1,4 +1,4 @@
-# routeur-eflaquet-2 - VXLAN mode dynamique multicast
+# routeur-fwong-2 - VXLAN mode dynamique multicast
 
 # ip link del vxlan10
 # ip link del br0
