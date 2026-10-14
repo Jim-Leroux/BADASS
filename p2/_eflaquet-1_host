@@ -1,0 +1,7 @@
+# host-eflaquet-1 - config overlay
+# Role : simple hote final, aucune notion de VXLAN, juste une IP sur le
+# reseau overlay 30.1.1.0/24. C'est le routeur qui encapsule pour lui.
+# Valable pour les deux modes (statique et multicast) : le host ne change pas.
+
+ip addr add 30.1.1.1/24 dev eth0
+ip link set eth0 up

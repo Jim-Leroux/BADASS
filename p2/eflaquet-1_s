@@ -1,0 +1,25 @@
+# routeur-eflaquet-1 - VXLAN mode statique (unicast)
+# eth0 = underlay (vers Switch_wil), eth1 = acces local vers host-eflaquet-1
+
+# --- 1. Underlay : IP sur l'interface physique qui va porter les paquets encapsules
+ip addr add 10.1.1.1/30 dev eth0
+ip link set eth0 up
+
+# --- 2. Interface VXLAN
+#   id 10        -> VNI (VXLAN Network Identifier), identique des deux cotes
+#   remote X     -> IP du VTEP distant (l'autre routeur), mode statique = unicast direct
+#   dstport 4789 -> port UDP standard VXLAN (RFC 7348)
+#   dev eth0     -> interface underlay utilisee pour encapsuler/desencapsuler
+ip link add vxlan10 type vxlan id 10 remote 10.1.1.2 dstport 4789 dev eth0
+
+# --- 3. Bridge local qui relie le tunnel VXLAN (monde distant) et eth1 (monde local)
+ip link add br0 type bridge
+ip link set vxlan10 master br0
+ip link set eth1 master br0
+
+# --- 4. Activation
+ip link set vxlan10 up
+ip link set eth1 up
+ip link set br0 up
+
+# Verif : ip -d link show vxlan10 / bridge fdb show

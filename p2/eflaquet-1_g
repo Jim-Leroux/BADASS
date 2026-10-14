@@ -1,0 +1,24 @@
+# routeur-eflaquet-1 - VXLAN mode dynamique multicast
+# Difference avec le mode statique : plus de "remote" unique, les VTEPs se
+# decouvrent dynamiquement via un groupe multicast.
+
+# Si tu enchaines apres le mode statique, nettoie d'abord :
+# ip link del vxlan10
+# ip link del br0
+
+ip addr add 10.1.1.1/30 dev eth0
+ip link set eth0 up
+
+# group 239.1.1.1 -> groupe multicast utilise pour la decouverte des VTEPs
+# (adresse arbitraire dans la plage multicast, identique sur les 2 routeurs)
+ip link add vxlan10 type vxlan id 10 group 239.1.1.1 dstport 4789 dev eth0
+
+ip link add br0 type bridge
+ip link set vxlan10 master br0
+ip link set eth1 master br0
+
+ip link set vxlan10 up
+ip link set eth1 up
+ip link set br0 up
+
+# Verif : ip -d link show vxlan10   (le champ "group" doit apparaitre)
