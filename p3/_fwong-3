@@ -1,0 +1,43 @@
+# _fwong-3 - Leaf / VTEP - AS 1
+# A coller dans la console du routeur (shell du conteneur).
+# eth0 = lien vers le RR (underlay), eth1 = acces vers host_fwong-2
+
+# --- 1. Underlay : IP du lien vers le RR + loopback (IP du VTEP)
+ip addr add 10.1.1.6/30 dev eth0
+ip addr add 1.1.1.3/32 dev lo
+ip link set eth0 up
+
+# --- 2. VXLAN piloté par EVPN : pas de remote/group, BGP apprend les MAC
+#   nolearning -> pas d'apprentissage de MAC par le data-plane
+#   local      -> IP source des paquets VXLAN = loopback du VTEP
+ip link add vxlan10 type vxlan id 10 dstport 4789 local 1.1.1.3 nolearning
+ip link add br0 type bridge
+ip link set vxlan10 master br0
+ip link set eth1 master br0
+ip link set vxlan10 up
+ip link set eth1 up
+ip link set br0 up
+
+vtysh << 'FRR'
+configure terminal
+hostname _fwong-3
+
+! --- 3. OSPF : pour joindre les loopbacks des autres VTEP
+router ospf
+ network 10.1.1.0/24 area 0
+ network 1.1.1.0/24 area 0
+exit
+
+! --- 4. BGP EVPN : session iBGP avec le RR uniquement
+router bgp 1
+ bgp router-id 1.1.1.3
+ neighbor 1.1.1.1 remote-as 1
+ neighbor 1.1.1.1 update-source lo
+ address-family l2vpn evpn
+  neighbor 1.1.1.1 activate
+  ! annonce automatiquement les VNI locaux (type 3) et les MAC apprises (type 2)
+  advertise-all-vni
+ exit-address-family
+end
+write memory
+FRR

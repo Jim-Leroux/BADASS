@@ -1,0 +1,38 @@
+# _fwong-1 - Route Reflector (RR) - AS 1
+# A coller dans la console du routeur (shell du conteneur).
+# eth0/eth1/eth2 = liens vers les leafs _fwong-2/3/4 (un /30 par lien)
+
+# --- 1. Underlay : IP des liens + loopback (router-id BGP et next-hop iBGP)
+ip addr add 10.1.1.1/30 dev eth0
+ip addr add 10.1.1.5/30 dev eth1
+ip addr add 10.1.1.9/30 dev eth2
+ip addr add 1.1.1.1/32 dev lo
+ip link set eth0 up
+ip link set eth1 up
+ip link set eth2 up
+
+vtysh << 'FRR'
+configure terminal
+hostname _fwong-1
+
+! --- 2. OSPF : annonce les liens et les loopbacks pour que les VTEP se joignent
+router ospf
+ network 10.1.1.0/24 area 0
+ network 1.1.1.0/24 area 0
+exit
+
+! --- 3. BGP EVPN : le RR relaie les routes EVPN entre les leafs (iBGP, meme AS)
+router bgp 1
+ bgp router-id 1.1.1.1
+ neighbor LEAFS peer-group
+ neighbor LEAFS remote-as 1
+ neighbor LEAFS update-source lo
+ ! voisins dynamiques : tout leaf de 1.1.1.0/24 peut ouvrir une session
+ bgp listen range 1.1.1.0/24 peer-group LEAFS
+ address-family l2vpn evpn
+  neighbor LEAFS activate
+  neighbor LEAFS route-reflector-client
+ exit-address-family
+end
+write memory
+FRR
